@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - PassForge</title>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --accent: #4f46e5;
+            --border: #e2e8f0;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f172a;
+                --card: #1e293b;
+                --text: #f1f5f9;
+                --muted: #94a3b8;
+                --accent: #818cf8;
+                --border: #334155;
+            }
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 0;
+        }
+        header {
+            background: var(--accent);
+            color: #fff;
+            padding: 48px 24px 40px;
+            text-align: center;
+        }
+        header h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+        header p { font-size: 15px; opacity: 0.85; }
+        .container {
+            max-width: 720px;
+            margin: -24px auto 48px;
+            padding: 0 20px;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .badge {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+        h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 28px 0 10px;
+            color: var(--accent);
+        }
+        h2:first-of-type { margin-top: 0; }
+        p, li { font-size: 15px; color: var(--text); margin-bottom: 8px; }
+        ul { padding-left: 20px; margin-bottom: 12px; }
+        li { margin-bottom: 4px; }
+        strong { font-weight: 600; }
+        .highlight {
+            background: color-mix(in srgb, var(--accent) 10%, transparent);
+            border-left: 3px solid var(--accent);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+        footer a { color: var(--accent); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🔐 PassForge</h1>
+    <p>Privacy Policy</p>
+</header>
+
+<div class="container">
+    <div class="card">
+        <span class="badge">Last updated: March 9, 2026</span>
+
+        <h2>1. Overview</h2>
+        <p>PassForge ("the App") is committed to protecting your privacy. This policy explains how the App handles your data.</p>
+
+        <div class="highlight">
+            <strong>TL;DR:</strong> The App is 100% offline. It collects zero data, contacts zero servers, and requires zero special permissions. Everything stays on your device.
+        </div>
+
+        <h2>2. Data Collection</h2>
+        <p>The App does <strong>NOT</strong> collect, transmit, or share any personal data. It operates entirely offline with no internet access - no network permission is requested or used.</p>
+
+        <h2>3. Data Storage</h2>
+        <p>All data you create (vault credentials, password history, password hints, settings) is stored exclusively on your device using:</p>
+        <ul>
+            <li><strong>Android Keystore</strong> - hardware-backed cryptographic key management; keys cannot be exported even with root access</li>
+            <li><strong>AES-256-GCM encryption</strong> - for vault passwords, password history entries, and password hints</li>
+            <li><strong>EncryptedSharedPreferences</strong> - the entire storage file is encrypted on disk using AES256-SIV (keys) and AES256-GCM (values)</li>
+            <li><strong>PBKDF2WithHmacSHA256</strong> - master password is never stored; a 256-bit key is derived using 100,000 iterations with a 32-byte random salt</li>
+        </ul>
+        <p>Vault credentials are double-encrypted: each password is individually encrypted with the master-password-derived AES-256-GCM key, and the entire storage file is encrypted via EncryptedSharedPreferences backed by the Android Keystore.</p>
+        <p>No data is stored on external servers, cloud services, or third-party systems.</p>
+
+        <h2>4. Screen Protection</h2>
+        <p>All screens that display or handle sensitive data (password vault, credential editor, master password entry, password history) are protected with Android's <strong>FLAG_SECURE</strong>. This prevents:</p>
+        <ul>
+            <li>Screenshots and screen recordings</li>
+            <li>Content appearing in the recent apps overview</li>
+            <li>Screen mirroring or casting from exposing passwords</li>
+        </ul>
+
+        <h2>5. Authentication &amp; Access Control</h2>
+        <p>The App uses multiple layers of authentication to protect your data:</p>
+        <ul>
+            <li><strong>Master password</strong> - Required to access the password vault (minimum 8 characters). The password itself is never stored.</li>
+            <li><strong>Biometric / device credential</strong> - Viewing or copying any password requires device authentication (fingerprint, face unlock, PIN, pattern, or device password) via Android's BiometricPrompt.</li>
+            <li><strong>Brute-force protection</strong> - After 5 consecutive failed master password attempts, a 30-second lockout is enforced before further attempts are allowed.</li>
+            <li><strong>Auto-lock</strong> - The vault automatically locks when returning from the background, requiring re-authentication.</li>
+        </ul>
+
+        <h2>6. Clipboard Protection</h2>
+        <p>Passwords copied to the clipboard are automatically cleared after 30 seconds to prevent leakage through clipboard history or other apps.</p>
+
+        <h2>7. Backup &amp; Export Security</h2>
+        <ul>
+            <li><strong>Backup prevention</strong> - Android auto-backup and ADB backup are disabled to prevent data extraction.</li>
+            <li><strong>Encrypted export</strong> - Vault exports are encrypted with a user-chosen password (minimum 8 characters) via PBKDF2 + AES-256-GCM. The export file (<code>.spg</code>) contains a 32-byte salt followed by the ciphertext. The export password is independent of the master password and is never stored.</li>
+        </ul>
+
+        <h2>8. Third-Party Services</h2>
+        <p>The App does not integrate with any third-party services, analytics platforms, advertising networks, or tracking systems. There are no SDKs, no telemetry, and no crash reporting services.</p>
+
+        <h2>9. Permissions</h2>
+        <p>The App requests <strong>no special permissions</strong>:</p>
+        <ul>
+            <li>No internet access</li>
+            <li>No camera or microphone</li>
+            <li>No contacts or phone</li>
+            <li>No location services</li>
+            <li>No external storage access (only its own private app directory)</li>
+        </ul>
+        <p>Import/export uses Android's Storage Access Framework (SAF) file picker, which requires no permission declaration.</p>
+
+        <h2>10. Data Deletion</h2>
+        <p>You can delete all App data at any time by:</p>
+        <ul>
+            <li>Clearing password history from <strong>Settings → Clear History</strong></li>
+            <li>Deleting individual vault credentials within the app</li>
+            <li>Deleting individual password hints</li>
+            <li>Uninstalling the App (completely removes all data from your device)</li>
+        </ul>
+
+        <h2>11. Children's Privacy</h2>
+        <p>The App does not knowingly collect data from anyone, including children under 13, because it collects no data whatsoever.</p>
+
+        <h2>12. Changes to This Policy</h2>
+        <p>Any changes to this privacy policy will be reflected in an app update with an updated "Last updated" date. This page will also be updated accordingly.</p>
+
+        <h2>13. Contact</h2>
+        <p>If you have questions about this privacy policy, please open an issue on the app's GitHub repository.</p>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 PassForge &middot; <a href="https://github.com">View on GitHub</a>
+</footer>
+
+</body>
+</html>
