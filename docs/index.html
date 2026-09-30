@@ -97,31 +97,33 @@
 
 <div class="container">
     <div class="card">
-        <span class="badge">Last updated: March 9, 2026</span>
+        <span class="badge">Last updated: September 30, 2026</span>
 
         <h2>1. Overview</h2>
         <p>PassForge ("the App") is committed to protecting your privacy. This policy explains how the App handles your data.</p>
 
         <div class="highlight">
-            <strong>TL;DR:</strong> The App is 100% offline. It collects zero data, contacts zero servers, and requires zero special permissions. Everything stays on your device.
+            <strong>TL;DR:</strong> The App has no internet permission, developer-operated backend, analytics, ads, or automatic cloud sync. Your vault is processed locally. Data leaves the device only when you explicitly export or share it through Android.
         </div>
 
         <h2>2. Data Collection</h2>
-        <p>The App does <strong>NOT</strong> collect, transmit, or share any personal data. It operates entirely offline with no internet access - no network permission is requested or used.</p>
+        <p>The developer does <strong>not</strong> receive, transmit, sell, or share your personal data. The App has no internet permission and cannot send vault data to PassForge servers.</p>
+        <p>The App stores information you choose to enter, including service names, optional account IDs or usernames, passwords, notes, and protected secrets. An account ID may be an email address. This content remains in local app storage unless you initiate an export or share action.</p>
 
         <h2>3. Data Storage</h2>
-        <p>All data you create (vault credentials, password history, password hints, settings) is stored exclusively on your device using:</p>
+        <p>All data you create (Saved Logins, Secure Notes &amp; Keys, password history, password hints, and settings) is stored on your device using:</p>
         <ul>
-            <li><strong>Android Keystore</strong> - hardware-backed cryptographic key management; keys cannot be exported even with root access</li>
+            <li><strong>Android Keystore</strong> - OS-managed, non-exportable cryptographic keys, with hardware backing when supported by the device</li>
             <li><strong>AES-256-GCM encryption</strong> - for vault passwords, password history entries, and password hints</li>
             <li><strong>EncryptedSharedPreferences</strong> - the entire storage file is encrypted on disk using AES256-SIV (keys) and AES256-GCM (values)</li>
+            <li><strong>SQLCipher and encrypted shard files</strong> - protected-secret metadata and encrypted secret shards are stored in app-private local storage</li>
             <li><strong>PBKDF2WithHmacSHA256</strong> - master password is never stored; a 256-bit key is derived using 100,000 iterations with a 32-byte random salt</li>
         </ul>
         <p>Vault credentials are double-encrypted: each password is individually encrypted with the master-password-derived AES-256-GCM key, and the entire storage file is encrypted via EncryptedSharedPreferences backed by the Android Keystore.</p>
-        <p>No data is stored on external servers, cloud services, or third-party systems.</p>
+        <p>PassForge does not automatically store data on external servers, cloud services, or third-party systems.</p>
 
         <h2>4. Screen Protection</h2>
-        <p>All screens that display or handle sensitive data (password vault, credential editor, master password entry, password history) are protected with Android's <strong>FLAG_SECURE</strong>. This prevents:</p>
+        <p>All screens that display or handle sensitive data (Saved Logins, Secure Notes &amp; Keys, credential editor, master password entry, password history) are protected with Android's <strong>FLAG_SECURE</strong>. This prevents:</p>
         <ul>
             <li>Screenshots and screen recordings</li>
             <li>Content appearing in the recent apps overview</li>
@@ -131,7 +133,8 @@
         <h2>5. Authentication &amp; Access Control</h2>
         <p>The App uses multiple layers of authentication to protect your data:</p>
         <ul>
-            <li><strong>Master password</strong> - Required to access the password vault (minimum 8 characters). The password itself is never stored.</li>
+            <li><strong>Master password</strong> - Required to access Saved Logins and Secure Notes &amp; Keys (minimum 8 characters). The password itself is never stored.</li>
+            <li><strong>Optional device unlock</strong> - If enabled, an authentication-bound Android Keystore key encrypts the derived vault key. PassForge never saves the master password. Removing or changing the device screen lock invalidates this convenience key and requires the master password again.</li>
             <li><strong>Biometric / device credential</strong> - Viewing or copying any password requires device authentication (fingerprint, face unlock, PIN, pattern, or device password) via Android's BiometricPrompt.</li>
             <li><strong>Brute-force protection</strong> - After 5 consecutive failed master password attempts, a 30-second lockout is enforced before further attempts are allowed.</li>
             <li><strong>Auto-lock</strong> - The vault automatically locks when returning from the background, requiring re-authentication.</li>
@@ -144,10 +147,11 @@
         <ul>
             <li><strong>Backup prevention</strong> - Android auto-backup and ADB backup are disabled to prevent data extraction.</li>
             <li><strong>Encrypted export</strong> - Vault exports are encrypted with a user-chosen password (minimum 8 characters) via PBKDF2 + AES-256-GCM. The export file (<code>.spg</code>) contains a 32-byte salt followed by the ciphertext. The export password is independent of the master password and is never stored.</li>
+            <li><strong>User-selected destination</strong> - Export uses Android's Storage Access Framework. You choose the destination, which may be local storage or a cloud document provider installed on your device. PassForge does not upload the file itself and does not receive provider account information.</li>
         </ul>
 
         <h2>8. Third-Party Services</h2>
-        <p>The App does not integrate with any third-party services, analytics platforms, advertising networks, or tracking systems. There are no SDKs, no telemetry, and no crash reporting services.</p>
+        <p>The App does not integrate with third-party online services, analytics platforms, advertising networks, or tracking systems. Its software dependencies, including AndroidX and SQLCipher, run locally and are not used to collect or transmit user data. There is no telemetry or crash-reporting service.</p>
 
         <h2>9. Permissions</h2>
         <p>The App requests <strong>no special permissions</strong>:</p>
@@ -156,21 +160,23 @@
             <li>No camera or microphone</li>
             <li>No contacts or phone</li>
             <li>No location services</li>
-            <li>No external storage access (only its own private app directory)</li>
+            <li>No broad external storage access</li>
         </ul>
-        <p>Import/export uses Android's Storage Access Framework (SAF) file picker, which requires no permission declaration.</p>
+        <p>Import/export uses Android's Storage Access Framework (SAF) file picker, which requires no permission declaration and grants access only to files or destinations you select.</p>
 
         <h2>10. Data Deletion</h2>
         <p>You can delete all App data at any time by:</p>
         <ul>
             <li>Clearing password history from <strong>Settings → Clear History</strong></li>
-            <li>Deleting individual vault credentials within the app</li>
+            <li>Deleting individual Saved Logins and Secure Notes &amp; Keys within the app</li>
             <li>Deleting individual password hints</li>
+            <li>Choosing <strong>Settings → Reset Master Password</strong>, then typing <code>RESET</code>. This permanently deletes all Saved Logins and Secure Notes &amp; Keys because encrypted vault data cannot be recovered without the original master password.</li>
+            <li>Clearing the App's storage in Android settings</li>
             <li>Uninstalling the App (completely removes all data from your device)</li>
         </ul>
 
         <h2>11. Children's Privacy</h2>
-        <p>The App does not knowingly collect data from anyone, including children under 13, because it collects no data whatsoever.</p>
+        <p>The developer does not knowingly receive or process personal data from anyone, including children under 13. User-created vault content remains under the user's control on the device unless the user explicitly exports or shares it.</p>
 
         <h2>12. Changes to This Policy</h2>
         <p>Any changes to this privacy policy will be reflected in an app update with an updated "Last updated" date. This page will also be updated accordingly.</p>
@@ -181,7 +187,7 @@
 </div>
 
 <footer>
-    &copy; 2026 PassForge &middot; <a href="https://github.com">View on GitHub</a>
+    &copy; 2026 PassForge &middot; 
 </footer>
 
 </body>
